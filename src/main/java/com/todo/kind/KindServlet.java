@@ -26,6 +26,8 @@ public class KindServlet extends HttpServlet {
         HttpServletRequest request,
         HttpServletResponse response
     ) throws ServletException, IOException {
+        String name = request.getParameter("name");
+
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 

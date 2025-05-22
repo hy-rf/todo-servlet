@@ -26,7 +26,7 @@ console.log(data);
 (async ()=> {
 const res = await fetch('/login',{
 method:'post',
-data:JSON.stringify(data)
+body:JSON.stringify(data)
 }).then(res=>res.json())
 console.log(res)
 })()

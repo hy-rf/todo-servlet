@@ -1,5 +1,6 @@
 package com.todo.login;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -16,30 +17,33 @@ public class LoginServlet extends HttpServlet {
         HttpServletRequest request,
         HttpServletResponse response
     ) throws ServletException, IOException {
+        request
+            .getRequestDispatcher("/WEB-INF/login.jsp")
+            .forward(request, response);
+    }
+
+    protected void doPost(
+        HttpServletRequest request,
+        HttpServletResponse response
+    ) throws ServletException, IOException {
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
 
-        StringBuilder jsonResponse = new StringBuilder("{");
-        Cookie[] cookies = request.getCookies();
-
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (jsonResponse.length() > 1) {
-                    jsonResponse.append(",");
-                }
-                jsonResponse
-                    .append("\"")
-                    .append(cookie.getName())
-                    .append("\":\"")
-                    .append(cookie.getValue())
-                    .append("\"");
+        // Read JSON request body
+        StringBuilder jsonRequest = new StringBuilder();
+        String line;
+        try (BufferedReader reader = request.getReader()) {
+            while ((line = reader.readLine()) != null) {
+                jsonRequest.append(line);
             }
-        } else {
-            jsonResponse.append("\"message\":\"No cookies found\"");
         }
 
-        jsonResponse.append("}");
-        out.print(jsonResponse.toString());
+        // Print JSON data to console
+        System.out.println("Received JSON data: " + jsonRequest.toString());
+
+        // Respond with the same JSON content
+        String jsonResponse = jsonRequest.toString();
+        out.print(jsonResponse);
         out.flush();
     }
 }
